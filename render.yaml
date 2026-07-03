@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: whatsapp-bot
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: BUSINESS_NAME
+        value: ENV
+      - key: BUSINESS_HOURS_START
+        value: "02:00"
+      - key: BUSINESS_HOURS_END
+        value: "24:00"
+      - key: TIMEZONE
+        value: Asia/Kolkata
+      - key: AUTO_REPLY_ENABLED
+        value: "true"
+      - key: AUTO_REPLY_DELAY
+        value: "20"
+      - key: ADMIN_NUMBER
+        value: 07012796255,

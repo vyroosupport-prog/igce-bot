@@ -1,0 +1,18 @@
+node_modules/
+session/
+.cache/
+.env
+package-lock.json
+# Initialize git
+git init
+
+# Add all files
+git add .
+
+# Commit
+git commit -m "Initial WhatsApp Bot"
+
+# Create repo on GitHub and push
+git remote add origin https://github.com/Okolie light/Okolie Light.git
+git branch -M main
+git push -u origin main
