@@ -7,16 +7,19 @@ async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
     
     const sock = makeWASocket({
-        auth: state
+        auth: state,
+        printQRInTerminal: false // Disable automatic QR
     });
 
-    // Handle QR code manually
     sock.ev.on('connection.update', (update) => {
         const { connection, lastDisconnect, qr } = update;
         
+        // Show QR code manually
         if (qr) {
             console.log('📱 SCAN THIS QR CODE WITH WHATSAPP:');
             QRCode.generate(qr, { small: true });
+            console.log('📲 Or copy this URL:');
+            console.log(qr);
         }
 
         if (connection === 'close') {
