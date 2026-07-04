@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node baileys-bot.js",
     "dev": "nodemon baileys-bot.js"
-  },
+},
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc13",
     "dotenv": "^16.3.1",
