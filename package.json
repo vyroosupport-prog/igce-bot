@@ -1,10 +1,10 @@
 {
-  "name": "whatsapp-business-bot",
+  "name": "igce-bot",
   "version": "1.0.0",
-  "description": "WhatsApp Auto-Reply + Business Bot for IGCE LIMITED",
+  "description": "IGCE LIMITED WhatsApp Business Bot",
   "main": "index.js",
   "scripts": {
-    "build": "apt-get update && apt-get install -y wget gnupg && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google.list' && apt-get update && apt-get install -y google-chrome-stable --no-install-recommends && rm -rf /var/lib/apt/lists/*",
+    "railway-build": "apt-get update && apt-get install -y wget gnupg && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google.list' && apt-get update && apt-get install -y google-chrome-stable --no-install-recommends && rm -rf /var/lib/apt/lists/*",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
