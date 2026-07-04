@@ -17,6 +17,8 @@ app.listen(port, () => {
 
 // ==================== WHATSAPP BOT ====================
 async function startBot() {
+    console.log('🚀 Starting bot...');
+    
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
     
     const sock = makeWASocket({
@@ -25,18 +27,22 @@ async function startBot() {
     });
 
     sock.ev.on('connection.update', (update) => {
+        console.log('📡 Connection update:', Object.keys(update));
+        
         const { connection, lastDisconnect, qr } = update;
         
         if (qr) {
             console.log('📱 SCAN THIS QR CODE WITH WHATSAPP:');
             QRCode.generate(qr, { small: true });
+            console.log('📲 Or copy this URL to scan:');
+            console.log(qr);
         }
 
         if (connection === 'close') {
             const shouldReconnect = (lastDisconnect?.error instanceof Boom)?.output?.statusCode !== 401;
             console.log('Connection closed, reconnecting...');
             if (shouldReconnect) {
-                startBot();
+                setTimeout(startBot, 5000);
             }
         } else if (connection === 'open') {
             console.log('✅ IGCE LIMITED Bot is ONLINE!');
