@@ -59,7 +59,7 @@ const client = new Client({
     }),
     puppeteer: {
         headless: true,
-        ...(chromePath && { executablePath: chromePath }),
+        // Remove the executablePath - let Puppeteer download Chromium
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
