@@ -33,10 +33,12 @@ const DB = {
 
 // ==================== FIND CHROME ====================
 function findChrome() {
+    // First, try to find system Chrome
     const possiblePaths = [
-        '/usr/bin/chromium-browser',
         '/usr/bin/google-chrome',
-        '/usr/bin/google-chrome-stable'
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium'
     ];
     
     for (const path of possiblePaths) {
@@ -47,6 +49,9 @@ function findChrome() {
             }
         } catch (e) {}
     }
+    
+    // If no system Chrome, return null to let Puppeteer download Chromium
+    console.log('⚠️ No browser found. Puppeteer will download Chromium.');
     return null;
 }
 
@@ -59,7 +64,6 @@ const client = new Client({
     }),
     puppeteer: {
         headless: true,
-        // Remove the executablePath - let Puppeteer download Chromium
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
