@@ -21,8 +21,19 @@ async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
     
     const sock = makeWASocket({
-        auth: state
+        auth: state,
+        // This enables pairing code method
+        printQRInTerminal: false
     });
+
+    // Generate pairing code
+    const phoneNumber = process.env.PHONE_NUMBER; // Add your phone number in Render env
+    if (phoneNumber) {
+        console.log(`📱 Requesting pairing code for ${phoneNumber}...`);
+        const code = await sock.requestPairingCode(phoneNumber);
+        console.log(`✅ PAIRING CODE: ${code}`);
+        console.log(`🔑 Enter this code in WhatsApp -> Settings -> Linked Devices -> Link with phone number`);
+    }
 
     sock.ev.on('connection.update', (update) => {
         console.log('📡 Connection update:', Object.keys(update));
@@ -30,8 +41,7 @@ async function startBot() {
         const { connection, lastDisconnect, qr } = update;
         
         if (qr) {
-            console.log('📱 QR CODE RECEIVED!');
-            console.log('🔗 Copy this URL into your browser:');
+            console.log('📱 QR CODE RECEIVED:');
             console.log(qr);
         }
 
