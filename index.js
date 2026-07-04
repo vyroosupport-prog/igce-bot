@@ -27,25 +27,46 @@ const DB = {
     supportTickets: new Map()
 };
 
+// ==================== FIND CHROME ====================
+function findChrome() {
+    // List of possible Chrome/Chromium paths
+    const possiblePaths = [
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/usr/bin/chrome',
+        '/opt/google/chrome/chrome'
+    ];
+    
+    for (const path of possiblePaths) {
+        try {
+            if (fs.existsSync(path)) {
+                console.log(`✅ Found browser at: ${path}`);
+                return path;
+            }
+        } catch (e) {}
+    }
+    
+    console.log('⚠️ No browser found. Using default.');
+    return null;
+}
+
+const CHROME_PATH = findChrome();
+
 // ==================== WHATSAPP CLIENT ====================
-// Set the Chrome path directly for Railway
-const CHROME_PATH = '/usr/bin/google-chrome-stable';
-
-console.log(`✅ Using Chrome at: ${CHROME_PATH}`);
-
 const client = new Client({
     authStrategy: new LocalAuth({
         dataPath: path.join(__dirname, 'session')
     }),
     puppeteer: {
         headless: true,
-        executablePath: CHROME_PATH,
+        ...(CHROME_PATH && { executablePath: CHROME_PATH }),
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
-            '--disable-gpu',
-            '--disable-features=IsolateOrigins,site-per-process'
+            '--disable-gpu'
         ]
     }
 });
