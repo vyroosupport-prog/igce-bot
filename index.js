@@ -30,30 +30,31 @@ const DB = {
 // ==================== FIND CHROME ====================
 function findChrome() {
     const possiblePaths = [
+        '/nix/store/*/bin/google-chrome',
+        '/nix/store/*/bin/chromium',
         '/usr/bin/google-chrome',
-        '/usr/bin/google-chrome-stable',
-        '/usr/bin/chromium-browser',
-        '/usr/bin/chromium',
-        '/opt/google/chrome/chrome'
+        '/usr/bin/chromium-browser'
     ];
-
-    console.log('🔍 Looking for Chrome...');
-    for (const p of possiblePaths) {
+    
+    for (const path of possiblePaths) {
         try {
-            if (fs.existsSync(p)) {
-                console.log(`✅ Found Chrome at: ${p}`);
-                return p;
+            const files = fs.readdirSync(path.replace('/*/bin', ''));
+            for (const file of files) {
+                const fullPath = `/nix/store/${file}/bin/google-chrome`;
+                if (fs.existsSync(fullPath)) {
+                    console.log(`✅ Found Chrome at: ${fullPath}`);
+                    return fullPath;
+                }
             }
         } catch (e) {}
     }
-
-    console.log('⚠️ Chrome not found. Trying default.');
+    
+    console.log('⚠️ No browser found. Using default.');
     return null;
 }
 
 const chromePath = findChrome();
 
-// ==================== WHATSAPP CLIENT ====================
 const client = new Client({
     authStrategy: new LocalAuth({
         dataPath: path.join(__dirname, 'session')
