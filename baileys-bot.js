@@ -22,26 +22,32 @@ async function startBot() {
     
     const sock = makeWASocket({
         auth: state,
-        // This enables pairing code method
-        printQRInTerminal: false
+        printQRInTerminal: false // We'll use pairing code
     });
 
-    // Generate pairing code
-    const phoneNumber = process.env.PHONE_NUMBER; // Add your phone number in Render env
-    if (phoneNumber) {
-        console.log(`📱 Requesting pairing code for ${phoneNumber}...`);
-        const code = await sock.requestPairingCode(phoneNumber);
-        console.log(`✅ PAIRING CODE: ${code}`);
-        console.log(`🔑 Enter this code in WhatsApp -> Settings -> Linked Devices -> Link with phone number`);
-    }
-
-    sock.ev.on('connection.update', (update) => {
+    // Wait for connection to be ready before requesting pairing code
+    sock.ev.on('connection.update', async (update) => {
         console.log('📡 Connection update:', Object.keys(update));
         
         const { connection, lastDisconnect, qr } = update;
         
+        // When the connection is ready, request pairing code
+        if (connection === 'connecting' || connection === 'open') {
+            try {
+                const phoneNumber = process.env.PHONE_NUMBER;
+                if (phoneNumber) {
+                    console.log(`📱 Requesting pairing code for ${phoneNumber}...`);
+                    const code = await sock.requestPairingCode(phoneNumber);
+                    console.log(`✅ PAIRING CODE: ${code}`);
+                    console.log(`🔑 Enter this code in WhatsApp -> Settings -> Linked Devices -> Link with phone number`);
+                }
+            } catch (error) {
+                console.log('⚠️ Could not request pairing code:', error.message);
+            }
+        }
+
         if (qr) {
-            console.log('📱 QR CODE RECEIVED:');
+            console.log('📱 QR CODE RECEIVED (Use pairing code instead if available):');
             console.log(qr);
         }
 
