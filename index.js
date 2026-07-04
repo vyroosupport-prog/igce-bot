@@ -27,33 +27,6 @@ const DB = {
     supportTickets: new Map()
 };
 
-// ==================== FIND CHROME ====================
-function findChrome() {
-    // List of possible Chrome/Chromium paths
-    const possiblePaths = [
-        '/usr/bin/google-chrome-stable',
-        '/usr/bin/google-chrome',
-        '/usr/bin/chromium-browser',
-        '/usr/bin/chromium',
-        '/usr/bin/chrome',
-        '/opt/google/chrome/chrome'
-    ];
-    
-    for (const path of possiblePaths) {
-        try {
-            if (fs.existsSync(path)) {
-                console.log(`✅ Found browser at: ${path}`);
-                return path;
-            }
-        } catch (e) {}
-    }
-    
-    console.log('⚠️ No browser found. Using default.');
-    return null;
-}
-
-const CHROME_PATH = findChrome();
-
 // ==================== WHATSAPP CLIENT ====================
 const client = new Client({
     authStrategy: new LocalAuth({
@@ -61,7 +34,6 @@ const client = new Client({
     }),
     puppeteer: {
         headless: true,
-        ...(CHROME_PATH && { executablePath: CHROME_PATH }),
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
