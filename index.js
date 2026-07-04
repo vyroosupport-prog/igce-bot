@@ -27,44 +27,24 @@ const DB = {
     supportTickets: new Map()
 };
 
-// ==================== FIND CHROME ====================
-function getChromePath() {
-    const possiblePaths = [
-        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-        'C:\\Users\\hp\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-        process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe',
-        process.env.PROGRAMFILES + '\\Google\\Chrome\\Application\\chrome.exe',
-        process.env['PROGRAMFILES(X86)'] + '\\Google\\Chrome\\Application\\chrome.exe'
-    ];
-    
-    for (const path of possiblePaths) {
-        if (fs.existsSync(path)) {
-            console.log(`✅ Found Chrome at: ${path}`);
-            return path;
-        }
-    }
-    console.log('⚠️ Chrome not found. Trying default...');
-    return null;
-}
-
-const chromePath = getChromePath();
-
 // ==================== WHATSAPP CLIENT ====================
+// Set the Chrome path directly for Railway
+const CHROME_PATH = '/usr/bin/google-chrome-stable';
+
+console.log(`✅ Using Chrome at: ${CHROME_PATH}`);
+
 const client = new Client({
     authStrategy: new LocalAuth({
         dataPath: path.join(__dirname, 'session')
     }),
     puppeteer: {
         headless: true,
-        ...(chromePath && { executablePath: chromePath }),
+        executablePath: CHROME_PATH,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
             '--disable-gpu',
-            '--disable-web-security',
             '--disable-features=IsolateOrigins,site-per-process'
         ]
     }
