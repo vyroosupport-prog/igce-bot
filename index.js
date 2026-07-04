@@ -33,25 +33,20 @@ const DB = {
 
 // ==================== FIND CHROME ====================
 function findChrome() {
-    // First check if Chrome is installed by Render
     const possiblePaths = [
-        '/usr/bin/google-chrome',
-        '/usr/bin/google-chrome-stable',
         '/usr/bin/chromium-browser',
-        '/usr/bin/chromium'
+        '/usr/bin/google-chrome',
+        '/usr/bin/google-chrome-stable'
     ];
     
-    console.log('🔍 Looking for Chrome...');
     for (const path of possiblePaths) {
         try {
             if (fs.existsSync(path)) {
-                console.log(`✅ Found Chrome at: ${path}`);
+                console.log(`✅ Found browser at: ${path}`);
                 return path;
             }
         } catch (e) {}
     }
-    
-    console.log('⚠️ Chrome not found. Trying Puppeteer default...');
     return null;
 }
 
