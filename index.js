@@ -4,6 +4,10 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 
+// ==================== SIMPLE CHROME FIX ====================
+// Force Puppeteer to use the system Chrome
+process.env.PUPPETEER_EXECUTABLE_PATH = '/usr/bin/google-chrome';
+
 // ==================== CONFIGURATION ====================
 const CONFIG = {
     businessName: process.env.BUSINESS_NAME || 'IGCE LIMITED',
@@ -29,12 +33,12 @@ const DB = {
 
 // ==================== FIND CHROME ====================
 function findChrome() {
+    // First check if Chrome is installed by Render
     const possiblePaths = [
         '/usr/bin/google-chrome',
         '/usr/bin/google-chrome-stable',
         '/usr/bin/chromium-browser',
-        '/usr/bin/chromium',
-        '/nix/store/*/bin/google-chrome'
+        '/usr/bin/chromium'
     ];
     
     console.log('🔍 Looking for Chrome...');
@@ -47,7 +51,7 @@ function findChrome() {
         } catch (e) {}
     }
     
-    console.log('⚠️ Chrome not found. Trying default...');
+    console.log('⚠️ Chrome not found. Trying Puppeteer default...');
     return null;
 }
 
