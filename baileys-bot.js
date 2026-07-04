@@ -21,8 +21,7 @@ async function startBot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info');
     
     const sock = makeWASocket({
-        auth: state,
-        printQRInTerminal: true
+        auth: state
     });
 
     sock.ev.on('connection.update', (update) => {
@@ -32,9 +31,8 @@ async function startBot() {
         
         if (qr) {
             console.log('📱 QR CODE RECEIVED!');
-            console.log('🔗 Scan this URL in your browser:');
+            console.log('🔗 Copy this URL into your browser:');
             console.log(qr);
-            console.log('📱 Or scan the QR code above.');
         }
 
         if (connection === 'close') {
@@ -47,31 +45,6 @@ async function startBot() {
             console.log('✅ IGCE LIMITED Bot is ONLINE!');
         }
     });
-
-    sock.ev.on('connection.update', (update) => {
-    console.log('📡 Connection update:', Object.keys(update));
-    
-    const { connection, lastDisconnect, qr } = update;
-    
-    if (qr) {
-        console.log('📱 QR CODE RECEIVED!');
-        console.log('🔗 COPY THIS URL AND PASTE IN YOUR BROWSER:');
-        console.log('================================================');
-        console.log(qr);
-        console.log('================================================');
-        console.log('📱 Or scan the QR code above.');
-    }
-
-    if (connection === 'close') {
-        const shouldReconnect = (lastDisconnect?.error instanceof Boom)?.output?.statusCode !== 401;
-        console.log('Connection closed, reconnecting...');
-        if (shouldReconnect) {
-            setTimeout(startBot, 5000);
-        }
-    } else if (connection === 'open') {
-        console.log('✅ IGCE LIMITED Bot is ONLINE!');
-    }
-});
 
     sock.ev.on('creds.update', saveCreds);
 
